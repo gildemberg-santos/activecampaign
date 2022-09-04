@@ -26,12 +26,10 @@ module Activecampaign
     end
 
     def json
-      puts @response.body
       JSON.parse(@response.body)
     end
 
     def status_code
-      puts @response.code
       @response.code.to_i
     end
 
