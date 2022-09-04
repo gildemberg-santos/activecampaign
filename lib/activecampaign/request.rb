@@ -19,12 +19,10 @@ module Activecampaign
     end
 
     def get
-      @response = http(:get)
-      if status_code == 200
-        json
-      else
-        raise Bitrix24::Error, json["error_description"]
-      end
+      @response = execute_request(:get)
+      return json if status_code == 200
+
+      raise Bitrix24::Error, json["error_description"]
     end
 
     def json
@@ -39,7 +37,7 @@ module Activecampaign
 
     private
 
-    def request_http(method = :post)
+    def requisition_settings(method = :post)
       request = Kernel.const_get("Net::HTTP::#{method.to_s.capitalize}").new(@url.request_uri)
       request["Content-Type"] = "application/json"
       request["Accept"] = "application/json"
@@ -47,11 +45,11 @@ module Activecampaign
       request
     end
 
-    def http(method = :post)
+    def execute_request(method = :post)
       http = Net::HTTP.new(@url.host, @url.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.request(request_http(method))
+      http.request(requisition_settings(method))
     end
   end
 end
