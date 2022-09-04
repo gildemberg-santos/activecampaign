@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
-require_relative 'activecampaign/version'
+require "uri"
+require "json"
+require "net/http"
+require "openssl"
+require "active_support/time"
+require "logger"
 
-module Activecampaign
-  class Error < StandardError; end
-  # Your code goes here...
-end
+module Activecampaign; end
+
+require "activecampaign/version"
+require "activecampaign/error"
+require "activecampaign/base"
+require "activecampaign/config"
+require "activecampaign/request"
