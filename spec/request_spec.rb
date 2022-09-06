@@ -40,7 +40,11 @@ describe Activecampaign::Request do
   end
 
   it "Payload Inválida" do
-    expect { subject.post('') }.to raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload must be a Hash 'String'")))
-    expect { subject.post({}) }.to raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload is required")))
+    expect do
+      subject.post("")
+    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload must be a Hash 'String'"))))
+    expect do
+      subject.post({})
+    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload is required"))))
   end
 end
