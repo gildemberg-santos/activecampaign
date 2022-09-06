@@ -7,3 +7,4 @@
 /spec/reports/
 /tmp/
 lib/activecampaign/config.rb
+.rubocop.yml
