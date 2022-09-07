@@ -5,46 +5,8 @@ require "spec_helper"
 describe Activecampaign::Request do
   let!(:url) { "https://api.activecampaign.com/" }
   let!(:token) { "0d575fe3de57ac0733061e1495c72a0cfc6d32d1140213d0bbb97c7157fd76f67ce8b7a9" }
-  subject { described_class.new(url, token) }
 
   it "URL e Token Válida" do
-    expect(described_class.new(url, token)).to(be_an_instance_of(Activecampaign::Request))
-  end
-
-  it "URL Inválida" do
-    expect do
-      described_class.new(nil, token)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "Url is must be a String 'NilClass'"))))
-
-    expect do
-      described_class.new("testando_a_url", token)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "Url is invalid 'testando_a_url'"))))
-
-    expect do
-      described_class.new("testando a url", token)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "Invalid URI 'bad URI(is not URI?): testando a url'"))))
-  end
-
-  it "Token Inválida" do
-    expect do
-      described_class.new(url, nil)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token must be a String 'NilClass'"))))
-
-    expect do
-      described_class.new(url, "")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token is required"))))
-
-    expect do
-      described_class.new(url, "testando_o_token")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token is invalid 'testando_o_token'"))))
-  end
-
-  it "Payload Inválida" do
-    expect do
-      subject.post("")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload must be a Hash 'String'"))))
-    expect do
-      subject.post({})
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload is required"))))
+    expect(described_class.new(url: url, token: token)).to(be_an_instance_of(Activecampaign::Request))
   end
 end
