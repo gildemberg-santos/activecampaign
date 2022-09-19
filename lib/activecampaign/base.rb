@@ -28,4 +28,13 @@ module Activecampaign
 
     token
   end
+
+  def self.validade_email(email)
+    regex_email = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+    raise Activecampaign::InvalidEmailError, "Email must be a String '#{email.class}'" unless email.is_a?(String)
+    raise Activecampaign::InvalidEmailError, "Email is required" if email.blank?
+    raise Activecampaign::InvalidEmailError, "Email is invalid '#{email}'" unless email.match?(regex_email)
+
+    email
+  end
 end
