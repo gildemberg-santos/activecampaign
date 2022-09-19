@@ -42,7 +42,7 @@ module Activecampaign
     end
 
     def json
-      JSON.parse(@response.read_body)
+      JSON.parse(body)
     rescue JSON::ParserError => error_json
       raise Activecampaign::JsonParseError, "Invalid JSON response #{error_json.message}"
     end
