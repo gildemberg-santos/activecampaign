@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# active = Activecampaign::Request.new
-# Activecampaign::Request.new.get
 module Activecampaign
   class Request
     def initialize(url:, token:)
@@ -12,22 +10,39 @@ module Activecampaign
 
     def post(payload = nil)
       Activecampaign.validate_payload(payload)
-
       @response = execute_request(method: :post, payload: payload)
-      return json if status_code == 200
+      raise Activecampaign::Error, "Error: #{error}. StatusCode: #{status_code}" unless [201].include?(status_code)
 
-      raise Activecampaign::Error, json["error_description"]
+      @response
+    end
+
+    def put(payload = nil)
+      Activecampaign.validate_payload(payload)
+      @response = execute_request(method: :put, payload: payload)
+      raise Activecampaign::Error, "Error: #{error}. StatusCode: #{status_code}" unless [200].include?(status_code)
+
+      @response
     end
 
     def get
       @response = execute_request(method: :get)
-      return json if status_code == 200
+      raise Activecampaign::Error, "Error: #{error} StatusCode: #{status_code}" unless [200].include?(status_code)
 
-      raise Activecampaign::Error, json["error_description"]
+      @response
+    end
+
+    def body
+      @response.read_body
+    end
+
+    def error
+      json["errors"].map { |error| error["title"] }.join(", ")
+    rescue StandardError
+      nil
     end
 
     def json
-      JSON.parse(@response.body)
+      JSON.parse(@response.read_body)
     rescue JSON::ParserError => error_json
       raise Activecampaign::JsonParseError, "Invalid JSON response #{error_json.message}"
     end
@@ -40,7 +55,9 @@ module Activecampaign
 
     def requisition_settings(method: :post, payload: nil)
       request = Kernel.const_get("Net::HTTP::#{method.to_s.capitalize}").new(@url.request_uri)
-      request.merge!({ "Content-Type" => "application/json", "Accept" => "application/json", "Api-Token" => @token })
+      request["Content-Type"] = "application/json"
+      request["Accept"] = "application/json"
+      request["Api-Token"] = @token
       request.body = payload.to_json unless payload.nil?
       request
     end
@@ -49,8 +66,8 @@ module Activecampaign
       http = Net::HTTP.new(@url.host, @url.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      request = requisition_settings(method: method, payload: payload)
-      http.request(request)
+      http_request = requisition_settings(method: method, payload: payload)
+      http.request(http_request)
     end
   end
 end
