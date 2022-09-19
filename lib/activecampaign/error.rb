@@ -6,4 +6,5 @@ module Activecampaign
   class JsonParseError < StandardError; end
   class InvalidPayloadError < StandardError; end
   class InvalidTokenError < StandardError; end
+  class InvalidEmailError < StandardError; end
 end
