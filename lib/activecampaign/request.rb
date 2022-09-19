@@ -38,7 +38,7 @@ module Activecampaign
     def error
       json["errors"].map { |error| error["title"] }.join(", ")
     rescue StandardError
-      nil
+      "undefined error"
     end
 
     def json
