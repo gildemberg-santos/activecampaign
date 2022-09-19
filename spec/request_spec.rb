@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe Activecampaign::Request do
-  let!(:url) { "https://api.activecampaign.com/" }
+  let!(:url) { "https://leadster1656523378.api-us1.com/" }
   let!(:token) { "0d575fe3de57ac0733061e1495c72a0cfc6d32d1140213d0bbb97c7157fd76f67ce8b7a9" }
 
   it "URL e Token Válida" do

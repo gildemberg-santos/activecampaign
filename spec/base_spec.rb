@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe Activecampaign do
-  let!(:url) { "https://api.activecampaign.com/" }
+  let!(:url) { "https://leadster1656523378.api-us1.com/" }
   let!(:token) { "0d575fe3de57ac0733061e1495c72a0cfc6d32d1140213d0bbb97c7157fd76f67ce8b7a9" }
 
   it "Url Válida" do
@@ -45,5 +45,23 @@ describe Activecampaign do
     expect do
       described_class.validate_payload({})
     end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload is required"))))
+  end
+
+  it "Email Inválida" do
+    expect do
+      described_class.validade_email(nil)
+    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email must be a String 'NilClass'"))))
+
+    expect do
+      described_class.validade_email("")
+    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email is required"))))
+
+    expect do
+      described_class.validade_email("testando_o_email")
+    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email is invalid 'testando_o_email'"))))
+  end
+
+  it "Email Válida" do
+    expect(described_class.validade_email("teste@gmail.com")).to(eq("teste@gmail.com"))
   end
 end

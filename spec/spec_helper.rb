@@ -9,7 +9,6 @@ require "logger"
 require "activecampaign/version"
 require "activecampaign/error"
 require "activecampaign/base"
-require "activecampaign/config"
 require "activecampaign/request"
 require "activecampaign/contact"
 
