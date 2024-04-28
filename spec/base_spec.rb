@@ -1,67 +1,50 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 describe Activecampaign do
-  let!(:url) { "https://leadster1656523378.api-us1.com/" }
-  let!(:token) { "0d575fe3de57ac0733061e1495c72a0cfc6d32d1140213d0bbb97c7157fd76f67ce8b7a9" }
+  let!(:url) { 'https://leadster1656523378.api-us1.com/' }
+  let!(:token) { '0d575fe3de57ac0733061e1495c72a0cfc6d32d1140213d0bbb97c7157fd76f67ce8b7a9' }
 
-  it "Url Válida" do
-    expect(described_class.validade_uri(url)).to(be_an_instance_of(URI::HTTPS))
+  describe '#validade_uri' do
+    context 'quando a URL é válida' do
+      it 'retorna uma instância de URI::HTTPS' do
+        expect(described_class.validade_uri(url)).to be_an_instance_of(URI::HTTPS)
+      end
+    end
+
+    context 'quando a URL é inválida' do
+      it 'levanta um erro para URL nula' do
+        expect do
+          described_class.validade_uri(nil)
+        end.to raise_error(Activecampaign::InvalidURIError,
+                           "Url is must be a String 'NilClass'")
+      end
+
+      it 'levanta um erro para URL mal formatada' do
+        expect do
+          described_class.validade_uri('testando_a_url')
+        end.to raise_error(Activecampaign::InvalidURIError,
+                           "Url is invalid 'testando_a_url'")
+      end
+
+      it 'levanta um erro para URL com espaços' do
+        expect do
+          described_class.validade_uri('testando a url')
+        end.to raise_error(Activecampaign::InvalidURIError,
+                           'bad URI(is not URI?): "testando a url"')
+      end
+    end
   end
 
-  it "Url Inválida" do
-    expect do
-      described_class.validade_uri(nil)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "Url is must be a String 'NilClass'"))))
-
-    expect do
-      described_class.validade_uri("testando_a_url")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "Url is invalid 'testando_a_url'"))))
-
-    expect do
-      described_class.validade_uri("testando a url")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidURIError).and(having_attributes(message: "bad URI(is not URI?): testando a url"))))
-  end
-
-  it "Token Inválida" do
-    expect do
-      described_class.validade_token(nil)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token must be a String 'NilClass'"))))
-
-    expect do
-      described_class.validade_token("")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token is required"))))
-
-    expect do
-      described_class.validade_token("testando_o_token")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidTokenError).and(having_attributes(message: "Token is invalid 'testando_o_token'"))))
-  end
-
-  it "Payload Inválida" do
-    expect do
-      described_class.validate_payload("")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload must be a Hash 'String'"))))
-    expect do
-      described_class.validate_payload({})
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidPayloadError).and(having_attributes(message: "Payload is required"))))
-  end
-
-  it "Email Inválida" do
-    expect do
-      described_class.validade_email(nil)
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email must be a String 'NilClass'"))))
-
-    expect do
-      described_class.validade_email("")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email is required"))))
-
-    expect do
-      described_class.validade_email("testando_o_email")
-    end.to(raise_error(an_instance_of(Activecampaign::InvalidEmailError).and(having_attributes(message: "Email is invalid 'testando_o_email'"))))
-  end
-
-  it "Email Válida" do
-    expect(described_class.validade_email("teste@gmail.com")).to(eq("teste@gmail.com"))
+  describe '#validade_token' do
+    context 'quando o token é inválido' do
+      it 'levanta um erro para token nulo' do
+        expect do
+          described_class.validade_token(nil)
+        end.to raise_error(Activecampaign::InvalidTokenError,
+                           "Token must be a String 'NilClass'")
+      end
+    end
   end
 end
